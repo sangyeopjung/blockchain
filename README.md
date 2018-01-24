@@ -6,16 +6,21 @@ A simple Java blockchain ledger created for studying purposes.
 
 - [x] Blockchain
 - [x] API
-- [ ] Consensus
+- [x] Consensus
+- [ ] Wallet
+- [ ] Signature
+- [x] Test
 
 ## Tools Used
 
-* Spring Boot
-* Maven
-* Jersey
-* Lombok
-* Jackson
-* Slf4j
+- Spring Boot
+- Maven
+- Jersey
+- Lombok
+- Jackson
+- Slf4j
+- JUnit
+- Mockito
 
 ## API
 
@@ -63,7 +68,7 @@ Response
 
 ### (POST) /blockchain/api/transactions/new
 
-Makes a new transaction
+Makes a new transaction and returns that transaction
 
 Request
 
@@ -83,6 +88,83 @@ Response
     "sender": "FishMoley",
     "recipient": "Clap",
     "amount": 420
+}
+```
+
+### (POST) /blockchain/api/nodes/register
+
+Registers a new node/peer and returns all registered nodes/peers
+
+Request
+
+```json
+{
+	"nodes": [ "http://localhost:5001" ]
+}
+```
+
+Response
+
+```json
+{
+    "message": "New nodes added",
+    "nodes": [
+        "http://localhost:1234",
+        "http://localhost:5001"
+    ]
+}
+```
+
+### (GET) /blockchain/api/nodes/resolve
+
+Updates the chain if possible and returns the updated chain
+
+Response
+
+```json
+{
+    "message": "The chain is authoritative",
+    "chain": [
+        {
+            "index": 1,
+            "timestamp": 1516803627844,
+            "proof": 0,
+            "previousHash": "Genesis Block",
+            "transactions": []
+        },
+        ... 
+    ],
+    "newChain": null
+}
+```
+
+```json
+{
+    "message": "The chain is updated",
+    "chain": null,
+    "newChain": [
+        {
+            "index": 1,
+            "timestamp": 1516803627844,
+            "proof": 0,
+            "previousHash": "Genesis Block",
+            "transactions": []
+        },
+        {
+            "index": 2,
+            "timestamp": 1516803664557,
+            "proof": 90936,
+            "previousHash": "0000d3b276b846572acc187f04cbfb44c1ca7ab7f9ee4383194a4e79572d0219",
+            "transactions": [
+                {
+                    "sender": "0",
+                    "recipient": "5510cb4ecc2e467b9a37db8adc2ae8cc",
+                    "amount": 1
+                }
+            ]
+        },
+        ...
+    ]
 }
 ```
 
