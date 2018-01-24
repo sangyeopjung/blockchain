@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class Transaction {
 
@@ -17,6 +18,6 @@ public class Transaction {
     @NotNull
     private String recipient;
     @NotNull
-    private double amount;
+    private long amount;
 
 }

@@ -1,4 +1,4 @@
-package hk.cse.ust.blockchain.dto;
+package hk.cse.ust.blockchain.controller.dto;
 
 import hk.cse.ust.blockchain.model.Block;
 import lombok.AllArgsConstructor;
@@ -13,9 +13,10 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChainDto implements Serializable {
+public class ConsensusDto implements Serializable {
 
     private String message;
     private List<Block> chain;
+    private List<Block> newChain;
 
 }

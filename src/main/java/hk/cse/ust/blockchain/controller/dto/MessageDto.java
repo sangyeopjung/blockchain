@@ -1,4 +1,4 @@
-package hk.cse.ust.blockchain.dto;
+package hk.cse.ust.blockchain.controller.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

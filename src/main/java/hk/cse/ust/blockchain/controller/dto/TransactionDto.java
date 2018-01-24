@@ -1,4 +1,4 @@
-package hk.cse.ust.blockchain.dto;
+package hk.cse.ust.blockchain.controller.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,13 +12,14 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TransactionForm implements Serializable {
+public class TransactionDto implements Serializable {
 
+    private String message;
     @NotNull
     private String sender;
     @NotNull
     private String recipient;
     @NotNull
-    private double amount;
+    private long amount;
 
 }

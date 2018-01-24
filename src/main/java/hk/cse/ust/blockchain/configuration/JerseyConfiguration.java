@@ -10,9 +10,9 @@ import javax.ws.rs.ApplicationPath;
 @Configuration
 @Component
 @ApplicationPath("/blockchain")
-public class JerseyConfig extends ResourceConfig {
+public class JerseyConfiguration extends ResourceConfig {
 
-    public JerseyConfig() {
+    public JerseyConfiguration() {
         register(BlockchainController.class);
         packages("hk.cse.ust.blockchain");
     }

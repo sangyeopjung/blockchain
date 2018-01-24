@@ -1,7 +1,5 @@
 package hk.cse.ust.blockchain.model;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.hash.Hashing;
 import lombok.Data;
 import org.slf4j.Logger;
@@ -9,10 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Data
 @Component
@@ -20,15 +15,17 @@ public class Blockchain {
 
     private final Logger log = LoggerFactory.getLogger(Blockchain.class);
 
-    private static final String ZEROS = "0000";
+    private static int difficulty = 4;
     private final String identifier = UUID.randomUUID().toString().replace("-", "");
 
     private List<Block> chain;
     private List<Transaction> currentTransactions;
+    private Collection<String> nodes;
 
     public Blockchain() {
         chain = new ArrayList<>();
         currentTransactions = new ArrayList<>();
+        nodes = new HashSet<>();
 
         log.info("Identifier: {}", identifier);
         addBlock(0, "Genesis Block");
@@ -48,7 +45,7 @@ public class Blockchain {
         return newBlock;
     }
 
-    public int newTransaction(String sender, String recipient, double amount) {
+    public int addTransaction(String sender, String recipient, long amount) {
         log.info("Creating a new transaction from [{}] to [{}] of amount [{}]",
                 sender, recipient, amount);
 
@@ -66,50 +63,78 @@ public class Blockchain {
     public int mineProof(Block block) {
         log.info("Mining for the proof...");
 
-        String nonce = blockToString(block);
+        String nonce = getHash(block);
 
-        int proof = 0;
+        int proof = -1;
         String key;
         do {
-            key = nonce + Integer.toString(proof++);
-        } while(! isValidProof(getHash(key)));
+            proof++;
+            key = nonce + Integer.toString(proof);
+        } while(! isValidHash(getHash(key)));
 
         log.info("Proof found: [{}]", proof);
         return proof;
     }
 
-    private static Boolean isValidProof(String hash) {
-        if (ZEROS.equals(hash.substring(0, ZEROS.length()))) {
-            System.out.println("Valid hash found: " + hash);
-            return true;
-        } else {
-            return false;
+    public static Boolean isValidHash(String hash) {
+        for (int i = 0; i < difficulty; i++) {
+            if (! "0".equals(hash.substring(i, i+1))) {
+                return false;
+            }
         }
+
+        return true;
     }
 
     public static String getHash(Block block) {
-        String key = blockToString(block);
-
+        String key = block.toString();
         return getHash(key);
     }
 
-    private static String getHash(String key) {
+    public static String getHash(String key) {
         return Hashing.sha256()
                 .hashString(key, StandardCharsets.UTF_8)
                 .toString();
     }
 
-    private static String blockToString(Block block) {
-        String string = "";
+    public void registerNode(String address) {
+        log.info("Registering a new node: [{}]", address);
+        nodes.add(address);
+    }
 
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            string = mapper.writeValueAsString(block);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
+    public static Boolean isValidChain(List<Block> chain) {
+        Block lastBlock = chain.get(0);
+        int currentIndex = 1;
+
+        while (currentIndex < chain.size()) {
+            Block block = chain.get(currentIndex);
+            if (! getHash(getHash(lastBlock)+Integer.toString(block.getProof()))
+                    .equals(block.getPreviousHash())) {
+                return false;
+            }
+
+            String key = getHash(lastBlock) + Integer.toString(block.getProof());
+            if (! isValidHash(getHash(key))) {
+                return false;
+            }
+
+            lastBlock = block;
+            currentIndex++;
         }
 
-        return string;
+        return true;
+    }
+
+    public Boolean areConflictsResolved(List<Block> otherChain) {
+        log.info("Resolving potential conflicts...");
+        int maxLength = chain.size();
+        int length = otherChain.size();
+
+        if (length > maxLength && isValidChain(otherChain)) {
+            setChain(otherChain);
+            return true;
+        }
+        return false;
     }
 
 }
