@@ -9,18 +9,20 @@ A simple Java blockchain ledger created for studying purposes.
 - [x] Consensus
 - [ ] Wallet
 - [ ] Signature
-- [x] Test
+- [x] Unit Test
+- [ ] Frontend
 
 ## Tools Used
 
-- Spring Boot
-- Maven
-- Jersey
-- Lombok
-- Jackson
-- Slf4j
-- JUnit
-- Mockito
+- Java 1.8
+- Spring Boot 1.5.9
+- Maven 3.5.2
+- Jersey 2.25.1
+- Lombok 1.16.20
+- Jackson 2.8.10
+- Slf4j 1.7.5
+- JUnit 4.12
+- Mockito 1.10.19
 
 ## API
 
@@ -36,10 +38,41 @@ Response
     "chain": [
         {
             "index": 1,
-            "timestamp": 1516489542010,
+            "timestamp": 1516825154660,
             "proof": 0,
             "previousHash": "Genesis Block",
             "transactions": []
+        },
+        {
+            "index": 2,
+            "timestamp": 1516825223097,
+            "proof": 319779,
+            "previousHash": "00009330a66fefbd524c583bc8a15e9ec5dc4f0d76f1e3af1041899e436bcde3",
+            "transactions": [
+                {
+                    "sender": "0",
+                    "recipient": "ec10a913771b433b8782a733c73e5ae2",
+                    "amount": 1
+                }
+            ]
+        },
+        {
+            "index": 3,
+            "timestamp": 1516825263380,
+            "proof": 168995,
+            "previousHash": "0000f5707b9ac262cac5c4c8197f36dbcaba249257696458b28f626d8301b1ff",
+            "transactions": [
+                {
+                    "sender": "FishMoley",
+                    "recipient": "Clap",
+                    "amount": 420
+                },
+                {
+                    "sender": "0",
+                    "recipient": "ec10a913771b433b8782a733c73e5ae2",
+                    "amount": 1
+                }
+            ]
         }
     ]
 }
@@ -53,13 +86,18 @@ Response
 ```json
 {
     "message": "New block created",
-    "index": 4,
-    "prevHash": "11088ac77ba712fc2f2a4cfa55ea0cbc9a677f3aebc2943061d972b5bf25e93d",
-    "proof": 33829,
+    "index": 3,
+    "previousHash": "0000f5707b9ac262cac5c4c8197f36dbcaba249257696458b28f626d8301b1ff",
+    "proof": 168995,
     "transactions": [
         {
+            "sender": "FishMoley",
+            "recipient": "Clap",
+            "amount": 420
+        },
+        {
             "sender": "0",
-            "recipient": "07d2e5eb82404366831e2b5b5a9933bd",
+            "recipient": "ec10a913771b433b8782a733c73e5ae2",
             "amount": 1
         }
     ]
@@ -84,7 +122,7 @@ Response
 
 ```json
 {
-    "message": "Transaction will be added to block 5",
+    "message": "Transaction will be added to block 3",
     "sender": "FishMoley",
     "recipient": "Clap",
     "amount": 420
@@ -131,8 +169,7 @@ Response
             "proof": 0,
             "previousHash": "Genesis Block",
             "transactions": []
-        },
-        ... 
+        }
     ],
     "newChain": null
 }
@@ -162,8 +199,7 @@ Response
                     "amount": 1
                 }
             ]
-        },
-        ...
+        }
     ]
 }
 ```

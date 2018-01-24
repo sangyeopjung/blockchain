@@ -1,6 +1,6 @@
-package hk.cse.ust.blockchain.controller.dto;
+package hk.ust.cse.blockchain.controller.dto;
 
-import hk.cse.ust.blockchain.model.Transaction;
+import hk.ust.cse.blockchain.model.Transaction;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

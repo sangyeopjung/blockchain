@@ -1,6 +1,6 @@
-package hk.cse.ust.blockchain.controller;
+package hk.ust.cse.blockchain.controller;
 
-import hk.cse.ust.blockchain.controller.dto.ChainDto;
+import hk.ust.cse.blockchain.controller.dto.ChainDto;
 
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;

@@ -1,4 +1,4 @@
-package hk.cse.ust.blockchain.model;
+package hk.ust.cse.blockchain.model;
 
 import com.google.common.hash.Hashing;
 import lombok.Data;

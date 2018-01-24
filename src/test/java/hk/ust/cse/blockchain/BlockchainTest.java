@@ -1,9 +1,10 @@
-package hk.cse.ust.blockchain;
+package hk.ust.cse.blockchain;
 
-import hk.cse.ust.blockchain.model.Block;
-import hk.cse.ust.blockchain.model.Blockchain;
-import hk.cse.ust.blockchain.model.Transaction;
+import hk.ust.cse.blockchain.model.Block;
+import hk.ust.cse.blockchain.model.Blockchain;
+import hk.ust.cse.blockchain.model.Transaction;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,8 +13,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.*;
 
-import static hk.cse.ust.blockchain.model.Blockchain.getHash;
-import static hk.cse.ust.blockchain.model.Blockchain.isValidHash;
+import static hk.ust.cse.blockchain.model.Blockchain.getHash;
 import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -69,7 +69,7 @@ public class BlockchainTest {
         Block block = new Block(1, 1, 1, "", new ArrayList<>());
         int proof = blockchain.mineProof(block);
 
-        assertTrue(isValidHash(getHash(getHash(block) + Integer.toString(proof))));
+        assertTrue(Blockchain.isValidHash(Blockchain.getHash(Blockchain.getHash(block) + Integer.toString(proof))));
     }
 
     @Test
@@ -77,8 +77,8 @@ public class BlockchainTest {
         String correctHash = "0000000000000000000000000000000000000000000000000000000000000000";
         String wrongHash = "1000000000000000000000000000000000000000000000000000000000000000";
 
-        assertTrue(isValidHash(correctHash));
-        assertFalse(isValidHash(wrongHash));
+        assertTrue(Blockchain.isValidHash(correctHash));
+        assertFalse(Blockchain.isValidHash(wrongHash));
     }
 
     @Test
@@ -102,10 +102,10 @@ public class BlockchainTest {
         blockchain.getChain().add(wrongBlock);
 
         assertFalse(Blockchain.isValidChain(blockchain.getChain()));
-        assertFalse(isValidHash(getHash(getHash(previousBlock)
+        assertFalse(Blockchain.isValidHash(Blockchain.getHash(Blockchain.getHash(previousBlock)
                 + Integer.toString(wrongBlock.getProof()))));
-        assertNotEquals(previousHash,
-                getHash(getHash(blockchain.getLastBlock())
+        Assert.assertNotEquals(previousHash,
+                Blockchain.getHash(Blockchain.getHash(blockchain.getLastBlock())
                         + Integer.toString(proof)));
 
     }
@@ -114,22 +114,22 @@ public class BlockchainTest {
     public void shouldReturnTrueForValidChain() {
         Block previousBlock = blockchain.getLastBlock();
         int proof = blockchain.mineProof(previousBlock);
-        String previousHash = getHash(getHash(previousBlock)+Integer.toString(proof));
+        String previousHash = Blockchain.getHash(Blockchain.getHash(previousBlock)+Integer.toString(proof));
         blockchain.addBlock(proof, previousHash);
         Block correctBlock = blockchain.getLastBlock();
 
         assertTrue(Blockchain.isValidChain(blockchain.getChain()));
-        assertTrue(isValidHash(getHash(getHash(previousBlock)
+        assertTrue(Blockchain.isValidHash(Blockchain.getHash(Blockchain.getHash(previousBlock)
                 + Integer.toString(correctBlock.getProof()))));
-        assertEquals(previousHash,
-                getHash(getHash(previousBlock) + Integer.toString(proof)));
+        Assert.assertEquals(previousHash,
+                Blockchain.getHash(Blockchain.getHash(previousBlock) + Integer.toString(proof)));
     }
 
     @Test
     public void shouldKeepChainIfFoundChainIsNotLonger() {
         Block previousBlock = blockchain.getLastBlock();
         int proof = blockchain.mineProof(previousBlock);
-        String previousHash = getHash(getHash(previousBlock)+Integer.toString(proof));
+        String previousHash = Blockchain.getHash(Blockchain.getHash(previousBlock)+Integer.toString(proof));
         blockchain.addBlock(proof, previousHash);
 
         Blockchain otherBlockchain = new Blockchain();
@@ -160,7 +160,7 @@ public class BlockchainTest {
         Blockchain otherBlockchain = new Blockchain();
         Block previousBlock = otherBlockchain.getLastBlock();
         int proof = otherBlockchain.mineProof(previousBlock);
-        String previousHash = getHash(getHash(previousBlock)+Integer.toString(proof));
+        String previousHash = Blockchain.getHash(Blockchain.getHash(previousBlock)+Integer.toString(proof));
         otherBlockchain.addBlock(proof, previousHash);
 
         List<Block> originalChain = blockchain.getChain();

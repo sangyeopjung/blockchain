@@ -1,4 +1,4 @@
-package hk.cse.ust.blockchain;
+package hk.ust.cse.blockchain;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

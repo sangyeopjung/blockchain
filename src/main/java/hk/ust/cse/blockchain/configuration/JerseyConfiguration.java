@@ -1,6 +1,6 @@
-package hk.cse.ust.blockchain.configuration;
+package hk.ust.cse.blockchain.configuration;
 
-import hk.cse.ust.blockchain.controller.BlockchainController;
+import hk.ust.cse.blockchain.controller.BlockchainController;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;

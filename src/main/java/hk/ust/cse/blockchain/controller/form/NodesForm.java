@@ -1,4 +1,4 @@
-package hk.cse.ust.blockchain.controller.dto;
+package hk.ust.cse.blockchain.controller.form;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,13 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class MessageDto implements Serializable {
+@NoArgsConstructor
+public class NodesForm implements Serializable {
 
-    private String message;
+    private List<String> nodes;
 
 }

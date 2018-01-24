@@ -1,4 +1,4 @@
-package hk.cse.ust.blockchain.configuration;
+package hk.ust.cse.blockchain.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;

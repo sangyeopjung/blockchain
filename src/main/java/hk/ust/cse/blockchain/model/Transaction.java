@@ -1,4 +1,4 @@
-package hk.cse.ust.blockchain.controller.form;
+package hk.ust.cse.blockchain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,9 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TransactionForm implements Serializable {
+public class Transaction {
 
     @NotNull
     private String sender;
