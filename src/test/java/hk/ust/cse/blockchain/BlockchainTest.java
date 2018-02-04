@@ -8,18 +8,22 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.security.PublicKey;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static hk.ust.cse.blockchain.controller.EncryptionHelper.keyToString;
+import static hk.ust.cse.blockchain.controller.EncryptionHelper.sign;
+import static hk.ust.cse.blockchain.controller.EncryptionHelper.verifySign;
 import static hk.ust.cse.blockchain.model.HashHelper.getHash;
 import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BlockchainTest {
 
+    @InjectMocks
     private Blockchain blockchain;
 
     @Before
@@ -49,17 +53,18 @@ public class BlockchainTest {
 
     @Test
     public void shouldAddCorrectTransaction() {
-        PublicKey key = blockchain.getWallet().getPublicKey();
+        String sender = keyToString(blockchain.getWallet().getPublicKey());
+        String recipient = "FishMoley";
         long amount = 9999999;
 
-        blockchain.addTransaction(keyToString(key), keyToString(key), amount);
+        Transaction transaction = blockchain.addTransaction(sender, recipient, amount);
 
         assertEquals(1, blockchain.getCurrentTransactions().size());
 
-        Transaction transaction = blockchain.getCurrentTransactions().get(0);
-        assertEquals(keyToString(key), transaction.getSender());
-        assertEquals(keyToString(key), transaction.getRecipient());
-        assertEquals(amount, transaction.getAmount());
+        assertEquals(sender, blockchain.getCurrentTransactions().get(0).getSender());
+        assertEquals(recipient, blockchain.getCurrentTransactions().get(0).getRecipient());
+        assertEquals(amount, blockchain.getCurrentTransactions().get(0).getAmount());
+        assertTrue(verifySign(transaction));
     }
 
     @Test
@@ -87,6 +92,27 @@ public class BlockchainTest {
         blockchain.registerNode("http://redundant.com");
 
         assertEquals(2, blockchain.getNodes().size());
+    }
+
+    @Test
+    public void shouldReturnFalseForInvalidSignature() {
+        Block previousBlock = blockchain.getLastBlock();
+        int proof = blockchain.mineProof(previousBlock);
+        String previousHash = getHash(getHash(previousBlock)+Integer.toString(proof));
+
+        List<Transaction> transactions = new ArrayList<>();
+        long timestamp = new Date().getTime();
+        byte[] signature = "wrong signature".getBytes(StandardCharsets.UTF_8);
+        Transaction newTransaction = new Transaction(
+                keyToString(blockchain.getWallet().getPublicKey()),
+                "recipient", 10, timestamp, signature);
+        transactions.add(newTransaction);
+
+        Block wrongTransactionBlock = new Block(blockchain.getChain().size()+1,
+                new Date().getTime(), proof, previousHash, transactions);
+        blockchain.getChain().add(wrongTransactionBlock);
+
+        assertFalse(Blockchain.isValidChain(blockchain.getChain()));
     }
 
     @Test

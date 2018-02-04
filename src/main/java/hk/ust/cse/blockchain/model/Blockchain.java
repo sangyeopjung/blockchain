@@ -15,7 +15,7 @@ import static hk.ust.cse.blockchain.model.HashHelper.getHash;
 @Component
 public class Blockchain {
 
-    private final Logger log = LoggerFactory.getLogger(Blockchain.class);
+    private static final Logger log = LoggerFactory.getLogger(Blockchain.class);
 
     private static int difficulty = 4;
 
@@ -99,6 +99,7 @@ public class Blockchain {
     }
 
     public static Boolean isValidChain(List<Block> chain) {
+        log.info("Checking if chain is valid");
         Block lastBlock = chain.get(0);
         for (int i = 1; i < chain.size(); i++) {
             Block block = chain.get(i);
@@ -106,17 +107,20 @@ public class Blockchain {
             List<Transaction> transactions = block.getTransactions();
             for (Transaction transaction : transactions) {
                 if (! verifySign(transaction)) {
+                    log.info("Sign is invalid");
                     return false;
                 }
             }
 
             if (! getHash(getHash(lastBlock)+Integer.toString(block.getProof()))
                     .equals(block.getPreviousHash())) {
+                log.info("Hash is not valid");
                 return false;
             }
 
             String key = getHash(lastBlock) + Integer.toString(block.getProof());
             if (! isValidHash(getHash(key))) {
+                log.info("Proof is not valid");
                 return false;
             }
 
