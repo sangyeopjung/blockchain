@@ -1,13 +1,15 @@
 package hk.ust.cse.blockchain.model;
 
-import com.google.common.hash.Hashing;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
 import java.util.*;
+
+import static hk.ust.cse.blockchain.controller.EncryptionHelper.sign;
+import static hk.ust.cse.blockchain.controller.EncryptionHelper.verifySign;
+import static hk.ust.cse.blockchain.model.HashHelper.getHash;
 
 @Data
 @Component
@@ -16,18 +18,18 @@ public class Blockchain {
     private final Logger log = LoggerFactory.getLogger(Blockchain.class);
 
     private static int difficulty = 4;
-    private final String identifier = UUID.randomUUID().toString().replace("-", "");
 
     private List<Block> chain;
     private List<Transaction> currentTransactions;
     private Collection<String> nodes;
+    private Wallet wallet;
 
     public Blockchain() {
         chain = new ArrayList<>();
         currentTransactions = new ArrayList<>();
         nodes = new HashSet<>();
+        wallet = new Wallet();
 
-        log.info("Identifier: {}", identifier);
         addBlock(0, "Genesis Block");
     }
 
@@ -45,15 +47,20 @@ public class Blockchain {
         return newBlock;
     }
 
-    public int addTransaction(String sender, String recipient, long amount) {
-        log.info("Creating a new transaction from [{}] to [{}] of amount [{}]",
-                sender, recipient, amount);
+    public Transaction addTransaction(String sender, String recipient, long amount) {
+        long timestamp = new Date().getTime();
 
-        currentTransactions.add(new Transaction(sender, recipient, amount));
+        log.info("Creating a new transaction from [{}] to [{}] of amount [{}] at time [{}]",
+                sender, recipient, amount, timestamp);
+
+        String transactionData = sender + recipient + Long.toString(amount) + Long.toString(timestamp);
+        byte[] signature = sign(transactionData, wallet.getSecretKey());
+        Transaction newTransaction = new Transaction(sender, recipient, amount, timestamp, signature);
+        currentTransactions.add(newTransaction);
 
         log.info("Transaction added.");
 
-        return getLastBlock().getIndex() + 1;
+        return newTransaction;
     }
 
     public Block getLastBlock() {
@@ -86,17 +93,6 @@ public class Blockchain {
         return true;
     }
 
-    public static String getHash(Block block) {
-        String key = block.toString();
-        return getHash(key);
-    }
-
-    public static String getHash(String key) {
-        return Hashing.sha256()
-                .hashString(key, StandardCharsets.UTF_8)
-                .toString();
-    }
-
     public void registerNode(String address) {
         log.info("Registering a new node: [{}]", address);
         nodes.add(address);
@@ -104,10 +100,16 @@ public class Blockchain {
 
     public static Boolean isValidChain(List<Block> chain) {
         Block lastBlock = chain.get(0);
-        int currentIndex = 1;
+        for (int i = 1; i < chain.size(); i++) {
+            Block block = chain.get(i);
 
-        while (currentIndex < chain.size()) {
-            Block block = chain.get(currentIndex);
+            List<Transaction> transactions = block.getTransactions();
+            for (Transaction transaction : transactions) {
+                if (! verifySign(transaction)) {
+                    return false;
+                }
+            }
+
             if (! getHash(getHash(lastBlock)+Integer.toString(block.getProof()))
                     .equals(block.getPreviousHash())) {
                 return false;
@@ -119,7 +121,6 @@ public class Blockchain {
             }
 
             lastBlock = block;
-            currentIndex++;
         }
 
         return true;

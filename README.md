@@ -7,8 +7,8 @@ A simple Java blockchain ledger created for studying purposes.
 - [x] Blockchain
 - [x] API
 - [x] Consensus
-- [ ] Wallet
-- [ ] Signature
+- [x] Wallet
+- [x] Signature
 - [x] Unit Test
 - [ ] Frontend
 
@@ -38,39 +38,23 @@ Response
     "chain": [
         {
             "index": 1,
-            "timestamp": 1516825154660,
+            "timestamp": 1517754597241,
             "proof": 0,
             "previousHash": "Genesis Block",
             "transactions": []
         },
         {
             "index": 2,
-            "timestamp": 1516825223097,
-            "proof": 319779,
-            "previousHash": "00009330a66fefbd524c583bc8a15e9ec5dc4f0d76f1e3af1041899e436bcde3",
+            "timestamp": 1517754890547,
+            "proof": 62420,
+            "previousHash": "0000290e43a261d7927f1c8316bc3f998d1f7d1152787ea877c90ba2be7c475b",
             "transactions": [
                 {
                     "sender": "0",
-                    "recipient": "ec10a913771b433b8782a733c73e5ae2",
-                    "amount": 1
-                }
-            ]
-        },
-        {
-            "index": 3,
-            "timestamp": 1516825263380,
-            "proof": 168995,
-            "previousHash": "0000f5707b9ac262cac5c4c8197f36dbcaba249257696458b28f626d8301b1ff",
-            "transactions": [
-                {
-                    "sender": "FishMoley",
-                    "recipient": "Clap",
-                    "amount": 420
-                },
-                {
-                    "sender": "0",
-                    "recipient": "ec10a913771b433b8782a733c73e5ae2",
-                    "amount": 1
+                    "recipient": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEueZrj8UrgLCBToTmjn3TxpGvYlROrrvvbNyNPXEQXk9gZY3W/Tqk6CswuJlthRH/onvy5kEkciiu1T3PQkHUCA==",
+                    "amount": 50,
+                    "timestamp": 1517754890542,
+                    "signature": "MEUCIQC5nN4GLTYTHvmvAgZRyL1eSJmyzaq2NUVHwmKVZlK1nQIgDYwD1QnFOFaqscicXzcbbQcYSnHyw8p9m5KSn8d/en8="
                 }
             ]
         }
@@ -86,19 +70,23 @@ Response
 ```json
 {
     "message": "New block created",
-    "index": 3,
-    "previousHash": "0000f5707b9ac262cac5c4c8197f36dbcaba249257696458b28f626d8301b1ff",
-    "proof": 168995,
+    "index": 2,
+    "previousHash": "00002c1656afe7b4bd0c0495ff79b577f1370520e4fb9dab2cdb87c00dca9965",
+    "proof": 163043,
     "transactions": [
         {
-            "sender": "FishMoley",
-            "recipient": "Clap",
-            "amount": 420
+            "sender": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAENbcuJ/jZ8jUxQ27bHAceInANvpJuLLNaTqTpgnGa63sj5NRxruWjMwwC8dsJS2xr4KO+wycBGV0hEOkzwNbVKw==",
+            "recipient": "MFkwKlB0ba4c6ff/fPI9QTPr47ZhEsst/ae7lAbWpWaJjoHLLUg7mPgpbxs71waxAqDg==",
+            "amount": 420,
+            "timestamp": 1517762432303,
+            "signature": "MEUCIQCaPkfNkQopvq0NRpJYGEO+T94kzV0fo6aSH1ftVyFeUgIgYY7O4ppZnDUvZcKbiXWRvKd/u20kDE8Gr6S2mbmpoBA="
         },
         {
             "sender": "0",
-            "recipient": "ec10a913771b433b8782a733c73e5ae2",
-            "amount": 1
+            "recipient": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAENbcuJ/jZ8jUxQ27bHAceInANvpJuLLNaTqTpgnGa63sj5NRxruWjMwwC8dsJS2xr4KO+wycBGV0hEOkzwNbVKw==",
+            "amount": 50,
+            "timestamp": 1517762461563,
+            "signature": "MEUCIF1qsHMqNZoBeMrX1mShstairTjqmi7/HhK1IXPtOLs9AiEAjWpbck96tQuyOaKIYYLICricUq/rZcdO/iytCUhQ8X4="
         }
     ]
 }
@@ -112,8 +100,7 @@ Request
 
 ```json
 {
-    "sender": "FishMoley",
-    "recipient": "Clap",
+	   "recipient": "MFkwKlB0ba4c6ff/fPI9QTPr47ZhEsst/ae7lAbWpWaJjoHLLUg7mPgpbxs71waxAqDg==",
     "amount": 420
 }
 ```
@@ -122,10 +109,12 @@ Response
 
 ```json
 {
-    "message": "Transaction will be added to block 3",
-    "sender": "FishMoley",
-    "recipient": "Clap",
-    "amount": 420
+    "message": "Transaction will be added to block 2",
+    "sender": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAENbcuJ/jZ8jUxQ27bHAceInANvpJuLLNaTqTpgnGa63sj5NRxruWjMwwC8dsJS2xr4KO+wycBGV0hEOkzwNbVKw==",
+    "recipient": "MFkwKlB0ba4c6ff/fPI9QTPr47ZhEsst/ae7lAbWpWaJjoHLLUg7mPgpbxs71waxAqDg==",
+    "amount": 420,
+    "timestamp": 1517762432303,
+    "signature": "MEUCIQCaPkfNkQopvq0NRpJYGEO+T94kzV0fo6aSH1ftVyFeUgIgYY7O4ppZnDUvZcKbiXWRvKd/u20kDE8Gr6S2mbmpoBA="
 }
 ```
 
@@ -182,21 +171,30 @@ Response
     "newChain": [
         {
             "index": 1,
-            "timestamp": 1516803627844,
+            "timestamp": 1517761798163,
             "proof": 0,
             "previousHash": "Genesis Block",
             "transactions": []
         },
         {
             "index": 2,
-            "timestamp": 1516803664557,
-            "proof": 90936,
-            "previousHash": "0000d3b276b846572acc187f04cbfb44c1ca7ab7f9ee4383194a4e79572d0219",
+            "timestamp": 1517762461568,
+            "proof": 163043,
+            "previousHash": "00002c1656afe7b4bd0c0495ff79b577f1370520e4fb9dab2cdb87c00dca9965",
             "transactions": [
                 {
+                    "sender": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAENbcuJ/jZ8jUxQ27bHAceInANvpJuLLNaTqTpgnGa63sj5NRxruWjMwwC8dsJS2xr4KO+wycBGV0hEOkzwNbVKw==",
+                    "recipient": "MFkwKlB0ba4c6ff/fPI9QTPr47ZhEsst/ae7lAbWpWaJjoHLLUg7mPgpbxs71waxAqDg==",
+                    "amount": 420,
+                    "timestamp": 1517762432303,
+                    "signature": "MEUCIQCaPkfNkQopvq0NRpJYGEO+T94kzV0fo6aSH1ftVyFeUgIgYY7O4ppZnDUvZcKbiXWRvKd/u20kDE8Gr6S2mbmpoBA="
+                },
+                {
                     "sender": "0",
-                    "recipient": "5510cb4ecc2e467b9a37db8adc2ae8cc",
-                    "amount": 1
+                    "recipient": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAENbcuJ/jZ8jUxQ27bHAceInANvpJuLLNaTqTpgnGa63sj5NRxruWjMwwC8dsJS2xr4KO+wycBGV0hEOkzwNbVKw==",
+                    "amount": 50,
+                    "timestamp": 1517762461563,
+                    "signature": "MEUCIF1qsHMqNZoBeMrX1mShstairTjqmi7/HhK1IXPtOLs9AiEAjWpbck96tQuyOaKIYYLICricUq/rZcdO/iytCUhQ8X4="
                 }
             ]
         }

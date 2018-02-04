@@ -15,8 +15,6 @@ import java.io.Serializable;
 public class TransactionForm implements Serializable {
 
     @NotNull
-    private String sender;
-    @NotNull
     private String recipient;
     @NotNull
     private long amount;

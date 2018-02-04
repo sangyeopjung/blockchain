@@ -5,6 +5,7 @@ import hk.ust.cse.blockchain.model.Block;
 import hk.ust.cse.blockchain.model.Blockchain;
 import hk.ust.cse.blockchain.controller.form.NodesForm;
 import hk.ust.cse.blockchain.controller.form.TransactionForm;
+import hk.ust.cse.blockchain.model.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import static hk.ust.cse.blockchain.controller.EncryptionHelper.keyToString;
+import static hk.ust.cse.blockchain.model.HashHelper.getHash;
+
 @Controller
 @Component
 @Path("/api")
@@ -29,10 +33,12 @@ public class BlockchainController {
 
     private Blockchain blockchain;
     private String responseMessage;
+    private String defaultKey;
 
     @Autowired
     public BlockchainController(Blockchain blockchain) {
         this.blockchain = blockchain;
+        this.defaultKey = "0";
     }
 
     @GET
@@ -56,10 +62,10 @@ public class BlockchainController {
         Block lastBlock = blockchain.getLastBlock();
         int proof = blockchain.mineProof(lastBlock);
 
-        blockchain.addTransaction("0", blockchain.getIdentifier(), 1);
+        blockchain.addTransaction(defaultKey, keyToString(blockchain.getWallet().getPublicKey()), 50);
 
-        String previousHash = Blockchain.getHash(
-                Blockchain.getHash(lastBlock)+Integer.toString(proof));
+        String previousHash = getHash(
+                getHash(lastBlock)+Integer.toString(proof));
         if ("".equals(previousHash)) {
             responseMessage = "Error calculating hash";
             log.info("Responding with message: [{}]", responseMessage);
@@ -102,16 +108,19 @@ public class BlockchainController {
     public Response newTransaction(@Valid TransactionForm transaction) {
         log.info("Received POST request to /blockchain/api/transactions/new");
 
-        int index = blockchain.addTransaction(transaction.getSender(),
-                transaction.getRecipient(), transaction.getAmount());
-        responseMessage = "Transaction will be added to block " + Integer.toString(index);
+        String sender = keyToString(blockchain.getWallet().getPublicKey());
+
+        Transaction newTransaction = blockchain.addTransaction(sender, transaction.getRecipient(), transaction.getAmount());
+        responseMessage = "Transaction will be added to block " + Integer.toString(blockchain.getChain().size()+1);
 
         log.info("Responding with message: [{}]", responseMessage);
         return Response.ok(TransactionDto.builder()
                     .message(responseMessage)
-                    .sender(transaction.getSender())
-                    .recipient(transaction.getRecipient())
-                    .amount(transaction.getAmount())
+                    .sender(newTransaction.getSender())
+                    .recipient(newTransaction.getRecipient())
+                    .amount(newTransaction.getAmount())
+                    .timestamp(newTransaction.getTimestamp())
+                    .signature(newTransaction.getSignature())
                     .build())
                 .build();
     }

@@ -1,12 +1,11 @@
 package hk.ust.cse.blockchain.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
+import java.security.PublicKey;
 
 @Data
 @NoArgsConstructor
@@ -19,5 +18,7 @@ public class Transaction {
     private String recipient;
     @NotNull
     private long amount;
+    private long timestamp;
+    private byte[] signature;
 
 }

@@ -21,5 +21,7 @@ public class TransactionDto implements Serializable {
     private String recipient;
     @NotNull
     private long amount;
+    private long timestamp;
+    private byte[] signature;
 
 }
