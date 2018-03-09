@@ -10,7 +10,7 @@ import java.security.*;
 @Data
 public class Wallet {
 
-    private final Logger log = LoggerFactory.getLogger(Wallet.class);
+    private static final Logger log = LoggerFactory.getLogger(Wallet.class);
 
     private PublicKey publicKey;
     private PrivateKey secretKey;

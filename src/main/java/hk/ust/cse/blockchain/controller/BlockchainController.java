@@ -29,7 +29,7 @@ import static hk.ust.cse.blockchain.model.HashHelper.getHash;
 @Produces(MediaType.APPLICATION_JSON)
 public class BlockchainController {
 
-    private static Logger log = LoggerFactory.getLogger(BlockchainController.class);
+    private static final Logger log = LoggerFactory.getLogger(BlockchainController.class);
 
     private Blockchain blockchain;
     private String responseMessage;

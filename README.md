@@ -15,7 +15,7 @@ A simple Java blockchain ledger created for studying purposes.
 ## Tools Used
 
 - Java 1.8
-- Spring Boot 1.5.9
+- Spring Boot 2.0.0
 - Maven 3.5.2
 - Jersey 2.25.1
 - Lombok 1.16.20

@@ -8,14 +8,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static hk.ust.cse.blockchain.controller.EncryptionHelper.keyToString;
-import static hk.ust.cse.blockchain.controller.EncryptionHelper.sign;
 import static hk.ust.cse.blockchain.controller.EncryptionHelper.verifySign;
 import static hk.ust.cse.blockchain.model.HashHelper.getHash;
 import static org.junit.Assert.*;
@@ -23,7 +21,6 @@ import static org.junit.Assert.*;
 @RunWith(MockitoJUnitRunner.class)
 public class BlockchainTest {
 
-    @InjectMocks
     private Blockchain blockchain;
 
     @Before
